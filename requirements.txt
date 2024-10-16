@@ -1,0 +1,6 @@
+datasets==3.0.1
+packaging==24.1
+azure-cli-core==2.65.0
+transformers==4.45.2
+peft==0.13.2
+torch==2.3.0
