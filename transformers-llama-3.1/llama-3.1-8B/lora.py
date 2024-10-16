@@ -9,19 +9,16 @@ from typing import Union
 class Prompter(object):
     __slots__ = ("template", "_verbose")
 
-    def __init__(self, template_name: str = "", verbose: bool = False):
+    def __init__(self, file_name: str = "", verbose: bool = False):
         self._verbose = verbose
-        if not template_name:
-            # Enforce the default here, so the constructor can be called with '' and will not break.
-            template_name = "alpaca"
-        file_name = osp.join("templates", f"{template_name}.json")
+        assert file_name != "", "file_name is required"
         if not osp.exists(file_name):
             raise ValueError(f"Can't read {file_name}")
         with open(file_name) as fp:
             self.template = json.load(fp)
         if self._verbose:
             print(
-                f"Using prompt template {template_name}: {self.template['description']}"
+                f"Using prompt template {file_name}: {self.template['description']}"
             )
 
     def generate_prompt(
@@ -51,7 +48,7 @@ class Prompter(object):
 
 
 data = load_dataset("json", data_files="/workspace/training_scripts/transformers-llama-3.1/llama-3.1-8B/dataset/huanhuan.json")
-prompter = Prompter("alpaca")
+prompter = Prompter("/workspace/training_scripts/transformers-llama-3.1/llama-3.1-8B/templates/alpaca.json")
 
 tokenizer = AutoTokenizer.from_pretrained('/workspace/checkpoints/Meta-Llama-3___1-8B-Instruct', use_fast=False, trust_remote_code=True)
 tokenizer.pad_token_id = (
